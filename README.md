@@ -45,8 +45,7 @@ Without parameters the default is IP: 192.168.1.1 and Port: 23.
 The package contains Yarp modules that can be used to control the JD Humanoid Robot. Once the 
 modules are started, they provide RPC Ports.
 
-
-- The JDModule is used to control motor position
+The **JDModule** is used to control motor position.
 
     command message: "set pos <motor_id> <position>"
         <motor_id>: integer [0 - 23]
@@ -55,7 +54,7 @@ modules are started, they provide RPC Ports.
     Example:
         set pos 0 120   - Looks to the left
 
-- The JDLookAtModule is used to control the gaze
+The **JDLookAtModule** is used to control the gaze.
 
     command message: "<x> <y> <z>"
         <x>:   float - x-coordinate in meters
