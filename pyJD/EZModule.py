@@ -95,7 +95,7 @@ class EZModule(yarp.RFModule):
 
 
     def getPeriod(self):
-        return 1.0
+        return 0.1
 
 
     def updateModule(self):
