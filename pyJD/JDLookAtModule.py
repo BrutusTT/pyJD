@@ -25,13 +25,20 @@ def dotproduct(vec_1, vec_2):
     """ This method calculates the dot-product of two vectors. """
     return sum((a*b) for a, b in zip(vec_1, vec_2))
 
+
 def length(vec):
     """ This method calculates the length of a vector. """
     return math.sqrt(dotproduct(vec, vec))
 
+
 def angle(vec_1, vec_2):
     """ This method calculates the angle between two vectors. """
     return math.acos(dotproduct(vec_1, vec_2) / (length(vec_1) * length(vec_2)))
+
+
+def rad2deg(rad):
+    """ This method calculates the degree from radians. """
+    return 180.0 * rad / math.pi
 
 
 class JDLookAtModule(EZModule):
@@ -47,21 +54,17 @@ class JDLookAtModule(EZModule):
         """
 
         # get the coordinates from the bottle
-        z_coord = command.get(0).asDouble() * -1.0
-        x_coord = command.get(1).asDouble()
-        y_coord = command.get(2).asDouble()
+        near_far    = command.get(0).asDouble() * -1.0
+        left_right  = command.get(1).asDouble()
+        down_up     = command.get(2).asDouble()
 
         # calculate the angles
-        angle_d0 = 180 * angle([0.0, 1.0, 0.0], [x_coord, y_coord, z_coord]) / math.pi
-        angle_d1 = 180 * angle([1.0, 0.0, 0.0], [x_coord, y_coord, z_coord]) / math.pi
-
-        # calculate the absolute servo positions
-        pos_d0 = 90 + angle_d0 if x_coord > 0 else 90 - angle_d0
-        pos_d1 = 90 + angle_d1 if z_coord > 0 else 90 - angle_d1
+        angle_d0 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) )
+        angle_d1 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
 
         # send it to the motors
-        self.sendPosition(0, pos_d0)
-        self.sendPosition(1, pos_d1)
+        self.sendPosition(0, angle_d0 + 20)
+        self.sendPosition(1, angle_d1)
 
         # reply with success
         reply.addString('ack')

@@ -31,8 +31,8 @@ class EZModule(yarp.RFModule):
     TCP_IP      = '192.168.1.1'
     TCP_PORT    = 23
 
-    LIMITS      = [ (0, 180),
-                    (0, 180),
+    LIMITS      = [ (30, 180),
+                    (70, 170),
                     (0, 180),
                     (0, 180),
                     (0, 180),
