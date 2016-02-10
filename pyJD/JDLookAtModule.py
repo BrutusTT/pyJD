@@ -82,7 +82,7 @@ def main():
 
     # resource_finder.configure(argc,argv);
 
-    module = JDLookAtModule(args.ip, args.port)
+    module = JDLookAtModule(args.ip, args.port, args.name)
     module.runModule(resource_finder)
 
     yarp.Network.fini()

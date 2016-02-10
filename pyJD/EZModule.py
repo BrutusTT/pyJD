@@ -54,15 +54,20 @@ class EZModule(yarp.RFModule):
                     (0, 180) ]
 
 
-    def __init__(self, ip, port):
+    def __init__(self, ip, port, prefix):
         yarp.RFModule.__init__(self)
         self.ip     = ip
         self.port   = int(port)
+        self.prefix = prefix
 
 
     def configure(self, rf):
 
-        self.setName(self.__class__.__name__)
+        name = self.__class__.__name__ 
+        if self.prefix:
+            name = self.prefix + '/' + name
+
+        self.setName(name)
 
         try:
             self.ezb = socket.create_connection((self.ip, self.port), timeout = 1)
@@ -73,7 +78,7 @@ class EZModule(yarp.RFModule):
         self.rpc_port = yarp.RpcServer()
 
         # name settings
-        port_name = '/%s/%s' % (self.__class__.__name__, 'rpc')
+        port_name = '/%s/%s' % (name, 'rpc')
 
         if not self.rpc_port.open(port_name):
             raise RuntimeError, EMSG_YARP_NOT_FOUND
@@ -141,5 +146,9 @@ def createArgParser():
                          dest       = 'port', 
                          default    = str(EZModule.TCP_PORT),
                          help       = 'Port for the JD robot')
+    parser.add_argument( '-n', '--name', 
+                         dest       = 'name', 
+                         default    = '',
+                         help       = 'Name prefix for Yarp port names')
 
     return parser.parse_args()
