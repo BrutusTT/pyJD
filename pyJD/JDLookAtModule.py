@@ -47,9 +47,9 @@ class JDLookAtModule(EZModule):
         """
 
         # get the coordinates from the bottle
-        x_coord = command.get(0).asDouble()
-        y_coord = command.get(1).asDouble()
-        z_coord = command.get(2).asDouble()
+        x_coord = command.get(1).asDouble()
+        y_coord = command.get(2).asDouble()
+        z_coord = command.get(0).asDouble()
 
         # calculate the angles
         angle_d0 = 180 * angle([0.0, 1.0, 0.0], [x_coord, y_coord, z_coord]) / math.pi

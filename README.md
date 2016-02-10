@@ -56,13 +56,13 @@ The **JDModule** is used to control motor position.
 
 The **JDLookAtModule** is used to control the gaze.
 
-    command message: "<x> <y> <z>"
-        <x>:   float - x-coordinate in meters
-        <y>:   float - y-coordinate in meters
-        <z>:   float - z-coordinate in meters
+    command message: "<z> <x> <y>"
+        <z>:   float - z-coordinate in meters   (distance)
+        <x>:   float - x-coordinate in meters   (left - right)
+        <y>:   float - y-coordinate in meters   (up - down)
 
     Example:
-        0.5 1.0 0.0     - Looks to the left
+        1.0 0.5 0.0   - Looks to the left
 
 
 
