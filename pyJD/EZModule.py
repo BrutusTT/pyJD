@@ -1,5 +1,5 @@
 ####################################################################################################
-#    Copyright (C) 2016 by Ingo Keller                                                             #
+#    Copyright (C) 2016 by Ingo Keller, Katrin Lohan                                               #
 #    <brutusthetschiepel@gmail.com>                                                                #
 #                                                                                                  #
 #    This file is part of pyJD (Python/Yarp Tools for the JD robot).                               #
@@ -10,7 +10,7 @@
 #                                                                                                  #
 #    pyJD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;             #
 #    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.     #
-#    See the GNU General Public License for more details.                                          #
+#    See the GNU Affero General Public License for more details.                                   #
 #                                                                                                  #
 #    You should have received a copy of the GNU Affero General Public License                      #
 #    along with pyJD.  If not, see <http://www.gnu.org/licenses/>.                                 #
@@ -28,9 +28,11 @@ class EZModule(yarp.RFModule):
     """ The EZBModule class provides a base class for developing modules for the JD robot.
     """
 
+    # Default IP Address and Port for the JD Humanoid Robot.
     TCP_IP      = '192.168.1.1'
     TCP_PORT    = 23
 
+    # Existing motor ID's are D0-D9, D12-D14 and D16-D18 there are more limits
     LIMITS      = [ (30, 180),
                     (70, 170),
                     (0, 170),
@@ -51,7 +53,7 @@ class EZModule(yarp.RFModule):
                     (50, 130),
                     (0, 180),
                     (0, 180),
-                    (0, 180) ] # Existing motor ID's are D0-D9, D12-D14 and D16-D18 there are more limits
+                    (0, 180) ] 
 
 
     def __init__(self, ip, port, prefix):
@@ -132,11 +134,18 @@ class EZModule(yarp.RFModule):
         """
         position = self.clip_limits(servo, int(position))
         self.ezb.send(chr(0xac + servo) + chr(position))
-        
 
 
+####################################################################################################
+#
+# Default methods for running the modules standalone 
+#
+####################################################################################################
 def createArgParser():
-    """ This method creates a base argument parser. """
+    """ This method creates a base argument parser. 
+    
+    @return Argument Parser object
+    """
     parser = argparse.ArgumentParser(description='Create a JDModule to control the JD robot.')
     parser.add_argument( '-i', '--ip', 
                          dest       = 'ip', 
@@ -152,3 +161,23 @@ def createArgParser():
                          help       = 'Name prefix for Yarp port names')
 
     return parser.parse_args()
+
+
+def main(module_cls):
+    """ This is a main method to run a module from command line. 
+
+    @param module_cls - an EZModule based class that can be started as a standalone module.
+    """
+    args = createArgParser()
+
+    yarp.Network.init()
+
+    resource_finder = yarp.ResourceFinder()
+    resource_finder.setVerbose(True)
+
+    # resource_finder.configure(argc,argv);
+
+    module = module_cls(args.ip, args.port, args.name)
+    module.runModule(resource_finder)
+
+    yarp.Network.fini()

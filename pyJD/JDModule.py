@@ -10,15 +10,12 @@
 #                                                                                                  #
 #    pyJD is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;             #
 #    without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.     #
-#    See the GNU General Public License for more details.                                          #
+#    See the GNU Affero General Public License for more details.                                   #
 #                                                                                                  #
 #    You should have received a copy of the GNU Affero General Public License                      #
 #    along with pyJD.  If not, see <http://www.gnu.org/licenses/>.                                 #
 ####################################################################################################
-import yarp
-
-
-from pyJD.EZModule import EZModule, createArgParser
+from pyJD.EZModule  import EZModule, main
 
 
 class JDModule(EZModule):
@@ -50,24 +47,7 @@ class JDModule(EZModule):
 
 
 
-def main():
-    """ This is a main method to run the module from command line. """
-    
-    args = createArgParser()
-
-    yarp.Network.init()
-
-    resource_finder = yarp.ResourceFinder()
-    resource_finder.setVerbose(True)
-
-    # resource_finder.configure(argc,argv);
-
-    module = JDModule(args.ip, args.port, args.name)
-    module.runModule(resource_finder)
-
-    yarp.Network.fini()
-
 
 if __name__ == '__main__':
-    main()
+    main(JDModule)
     
