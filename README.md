@@ -28,16 +28,26 @@ Example: OSX using [Homebrew](http://brew.sh)
 
 ## Running the Modules
 
-JDModule:
-
-    python -m pyJD.JDModule --ip <IP Address> --port <Port>
+Each module can be started standalone using the following command line.
 
 
-JDLookAtModule:
+    python -m pyJD.<ModuleName> [--ip <IP Address>] [--port <Port>] [--name <Name Prefix>]
 
-    python -m pyJD.JDLookAtModule --ip <IP Address> --port <Port>
+Parameters:
 
-Without parameters the default is IP: 192.168.1.1 and Port: 23.
+    []            - denotes optional parameter
+    <ModuleName>  - can be one of the following: - JDModule
+                                                 - JDLookAtModule
+                                                 - JDPointAtModuleLeftArm
+                                                 - JDPointAtModuleRightArm
+    <IP Address>  - default is 192.168.1.1
+    <Port>        - default is 23
+    <Name Prefix> - if a name is given it will be used as a prefix for the port names
+                    e.g.:  --name test results in /test/JDModule/rpc
+
+Example:
+
+    python -m pyJD.JDLookAtModule --name MyRobot
 
 
 ## General
@@ -64,6 +74,16 @@ The **JDLookAtModule** is used to control the gaze.
     Example:
         -1.0 0.5 0.0   - Looks to the left (Fixation Point: 1m in front + 50cm to the left side)
 
+The **JDPointAtModuleLeftArm** and **JDPointAtModuleRightArm** are used to control the arms in order
+to point towards a given point. However, the modules do not take impossible positions into account.
+
+    command message: "<near-far> <left-right> <down-up>"
+        <near-far>:   float - distance in meters [  inf, -inf ] (Be aware: negative distance!)
+        <left-right>: float - distance in meters [ -inf,  inf ]
+        <down-up>:    float - distance in meters [ -inf,  inf ]
+
+    Example:
+        -1.0 0.5 0.0   - Points to the left (Point: 1m in front + 50cm to the left side)
 
 
 
