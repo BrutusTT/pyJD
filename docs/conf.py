@@ -20,6 +20,7 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
 
 # -- General configuration ------------------------------------------------
 
@@ -345,3 +346,10 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
+github_doc_root = 'http://pyjd.readthedocs.io/en/latest/'
+
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'url_resolver': lambda url: github_doc_root + url
+            }, True)
+    app.add_transform(AutoStructify)
