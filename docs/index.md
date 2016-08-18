@@ -52,8 +52,14 @@ Example:
 
 ## [Modules](modules/index.md)
 
-The package contains Yarp modules that can be used to control the JD Humanoid Robot. Once the 
-modules are started, they provide RPC Ports.
+The package contains Yarp modules that can be used to control the JD Humanoid Robot. 
+
+* [JDModule](modules/JDModule.md)
+* [JDLookAtModule](modules/JDLookAtModule.md)
+* [JDPointAtModuleLeftArm](modules/JDPointAtModuleLeftArm.md)
+* [JDPointAtModuleRightArm](modules/JDPointAtModuleRightArm.md)
+* [JDVideo](modules/JDVideo.md)
+* [JDFollowFace](modules/JDFollowFace.md)
 
 Happy hacking!
 
