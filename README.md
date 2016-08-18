@@ -1,3 +1,5 @@
+[![Documentation Status](https://readthedocs.org/projects/pyJD/badge/?version=latest)](https://pyJD.readthedocs.io/en/latest/)
+
 # pyJD - A Python/Yarp Wrapper for the JD robot
 
 pyJD is a collection of [Yarp](https://github.com/robotology/yarp) Modules to control the 
