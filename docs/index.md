@@ -50,42 +50,10 @@ Example:
     python -m pyJD.JDLookAtModule --name MyRobot
 
 
-## General
+## [Modules](modules/index.md)
 
 The package contains Yarp modules that can be used to control the JD Humanoid Robot. Once the 
 modules are started, they provide RPC Ports.
-
-The **JDModule** is used to control motor position.
-
-    command message: "set pos <motor_id> <position>"
-        <motor_id>: integer [0 - 23]
-        <position>: integer [0 - 180]
-
-    Example:
-        set pos 0 130   - Looks to the left
-
-The **JDLookAtModule** is used to control the gaze.
-
-    command message: "<near-far> <left-right> <down-up>"
-        <near-far>:   float - distance in meters [  0.1, -inf ] (Be aware: negative distance!)
-        <left-right>: float - distance in meters [ -inf,  inf ]
-        <down-up>:    float - distance in meters [ -inf,  inf ]
-
-    Example:
-        -1.0 0.5 0.0   - Looks to the left (Fixation Point: 1m in front + 50cm to the left side)
-
-The **JDPointAtModuleLeftArm** and **JDPointAtModuleRightArm** are used to control the arms in order
-to point towards a given point. However, the modules do not take impossible positions into account.
-
-    command message: "<near-far> <left-right> <down-up>"
-        <near-far>:   float - distance in meters [  inf, -inf ] (Be aware: negative distance!)
-        <left-right>: float - distance in meters [ -inf,  inf ]
-        <down-up>:    float - distance in meters [ -inf,  inf ]
-
-    Example:
-        -1.0 0.5 0.0   - Points to the left (Point: 1m in front + 50cm to the left side)
-
-
 
 Happy hacking!
 
