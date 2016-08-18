@@ -1,4 +1,4 @@
-[![Documentation Status](https://readthedocs.org/projects/pyJD/badge/?version=latest)](https://pyJD.readthedocs.io/en/latest/)
+[![Documentation Status](https://readthedocs.org/projects/pyjd/badge/)](https://pyjd.readthedocs.io)
 
 # pyJD - A Python/Yarp Wrapper for the JD robot
 
