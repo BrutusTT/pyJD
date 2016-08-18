@@ -50,16 +50,11 @@ Example:
     python -m pyJD.JDLookAtModule --name MyRobot
 
 
-## [Modules](modules/index.md)
+# Modules
 
 The package contains Yarp modules that can be used to control the JD Humanoid Robot. 
 
-* [JDModule](modules/JDModule.md)
-* [JDLookAtModule](modules/JDLookAtModule.md)
-* [JDPointAtModuleLeftArm](modules/JDPointAtModuleLeftArm.md)
-* [JDPointAtModuleRightArm](modules/JDPointAtModuleRightArm.md)
-* [JDVideo](modules/JDVideo.md)
-* [JDFollowFace](modules/JDFollowFace.md)
+* [Modules](modules/index.md)
 
 Happy hacking!
 
