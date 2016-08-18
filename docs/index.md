@@ -5,7 +5,7 @@ pyJD is a collection of [Yarp](https://github.com/robotology/yarp) Modules to co
 
 
 * [Installation](installation.md)
-* [Running the modules](running.md)
+* [Usage](usage.md)
 * [Modules](modules/index.md)
 
 Happy hacking!
