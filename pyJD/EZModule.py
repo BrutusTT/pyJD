@@ -178,6 +178,7 @@ def main(module_cls):
     # resource_finder.configure(argc,argv);
 
     module = module_cls(args.ip, args.port, args.name)
+    module.configure(resource_finder)
     module.runModule(resource_finder)
 
     yarp.Network.fini()
