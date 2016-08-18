@@ -1,8 +1,8 @@
 # Modules
 
-* [JDModule](modules/JDModule.md)
-* [JDLookAtModule](modules/JDLookAtModule.md)
-* [JDPointAtModuleLeftArm](modules/JDPointAtModuleLeftArm.md)
-* [JDPointAtModuleRightArm](modules/JDPointAtModuleRightArm.md)
-* [JDVideo](modules/JDVideo.md)
-* [JDFollowFace](modules/JDFollowFace.md)
+* [JDModule](JDModule.md)
+* [JDLookAtModule](JDLookAtModule.md)
+* [JDPointAtModuleLeftArm](JDPointAtModuleLeftArm.md)
+* [JDPointAtModuleRightArm](JDPointAtModuleRightArm.md)
+* [JDVideo](JDVideo.md)
+* [JDFollowFace](JDFollowFace.md)
