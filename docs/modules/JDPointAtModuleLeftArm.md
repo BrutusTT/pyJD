@@ -2,9 +2,7 @@
 
 The module is used to control the arms in order to point towards a given point. However, the module does not take impossible positions into account.
 
-## Port List
-
-### ``/JDPointAtModuleLeftArm/rpc``
+## ``/JDPointAtModuleLeftArm/rpc``
 
 * **Type**: RPC
 

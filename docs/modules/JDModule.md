@@ -2,9 +2,7 @@
 
 The JDModule can be used to set JD's joints to specified positions.
 
-## Port List
-
-### ``/JDModule/rpc``
+## ``/JDModule/rpc``
 
 * **Type**: RPC
 * **Message Format**: ``set pos <joint_id> <position>``
