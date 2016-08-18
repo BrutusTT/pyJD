@@ -4,11 +4,7 @@ This module is used to calculate the head joint positions provided that it recei
 
 ## Port List
 
-``/JDFollowFace/face``
-
-``/JDFollowFace/position``
-
-### Port ``/JDFollowFace/face``
+### ``/JDFollowFace/face``
 
 * **Type**: Input
 * **Message Format**: `` <face_count> (  (<x0> <y0>) (<x1> <y1>) ...  )``
@@ -17,7 +13,7 @@ This module is used to calculate the head joint positions provided that it recei
 	* ``<xn>: integer`` - x-center of the n-th face
 	* ``<yn>: integer`` - y-center of the n-th face
 
-### Port ``/JDFollowFace/position``
+### ``/JDFollowFace/position``
 
 * **Type**: Output
 * **Message Format**: ``<near_far> <left_right> <down_up>``
