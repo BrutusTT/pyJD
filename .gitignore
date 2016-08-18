@@ -5,3 +5,6 @@
 build/
 dist/
 *.egg-info/
+.settings/org.eclipse.core.resources.prefs
+
+docs/_build
