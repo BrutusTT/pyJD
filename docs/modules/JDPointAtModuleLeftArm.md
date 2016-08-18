@@ -4,9 +4,7 @@ The module is used to control the arms in order to point towards a given point. 
 
 ## Port List
 
-``/JDPointAtModuleLeftArm/rpc``
-
-### Port ``/JDPointAtModuleLeftArm/rpc``
+### ``/JDPointAtModuleLeftArm/rpc``
 
 * **Type**: RPC
 

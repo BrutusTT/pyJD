@@ -4,9 +4,7 @@ The module is used to control the gaze.
 
 ## Port List
 
-``/JDLookAtModule/rpc``
-
-### Port ``/JDLookAtModule/rpc``
+### ``/JDLookAtModule/rpc``
 
 * **Type**: RPC
 
