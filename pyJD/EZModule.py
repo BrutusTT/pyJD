@@ -136,6 +136,64 @@ class EZModule(yarp.RFModule):
         self.ezb.send(chr(0xac + servo) + chr(position))
 
 
+    def createInputPort(self, name, mode = 'unbuffered'):
+        """ This method returns an input port.
+        
+        @param obj      - the object that the port is created for
+        @param name     - if a name is provided it gets appended to the modules name
+        @param buffered - if buffered is True a buffered port will be used otherwise not; 
+                          default is True.
+        @result port
+        """
+        return self.__createPort(name + ':i', None, mode)
+    
+
+    def __createPort(self, name, target = None, mode = 'unbuffered'):
+        """ This method returns a port object.
+    
+        @param name     - yarp name for the port
+        @param obj      - object for which the port is created
+        @param buffered - if buffered is True a buffered port will be used otherwise not; 
+                          default is True.
+        @result port
+        """
+        # create port
+        if mode == 'buffered':
+            port = yarp.BufferedPortBottle()
+
+        elif mode == 'rpcclient':
+            port = yarp.RpcClient()
+    
+        elif mode == 'rpcserver':
+            port = yarp.RpcServer()
+        
+        else:
+            port = yarp.Port()
+    
+        # build port name
+        port_name = ['']
+
+        # prefix handling
+        if hasattr(self, 'prefix') and self.prefix:
+            port_name.append(self.prefix)
+ 
+        port_name.append(self.__class__.__name__)
+        port_name.append(name)
+            
+        # open port
+        if not port.open('/'.join(port_name)):
+            raise RuntimeError, EMSG_YARP_NOT_FOUND
+    
+        # add output if given
+        if target:
+            port.addOutput(target)
+    
+        if hasattr(self, '_ports'):
+            self._ports.append(port)
+        
+        return port
+    
+    
 ####################################################################################################
 #
 # Default methods for running the modules standalone 
