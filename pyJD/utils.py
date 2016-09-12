@@ -30,6 +30,8 @@ def length(vec):
 
 def angle(vec_1, vec_2):
     """ This method calculates the angle between two vectors. """
+    if length(vec_1) == 0 or length(vec_2) == 0:
+        return 0
     return math.acos(dotproduct(vec_1, vec_2) / (length(vec_1) * length(vec_2)))
 
 
