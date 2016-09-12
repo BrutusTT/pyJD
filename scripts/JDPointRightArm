@@ -1,0 +1,8 @@
+#!/usr/bin/env python2
+
+from pyJD.EZModule import main
+from pyJD.JDPointATModuleRightARM import JDPointAtModuleRightARM
+
+
+if __name__ == '__main__':
+    main(JDPointAtModuleRightARM)

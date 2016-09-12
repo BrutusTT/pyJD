@@ -46,4 +46,12 @@ setup( name                 = 'pyJD',
        entry_points         = """
        # -*- Entry points: -*-
        """,
+
+       scripts = [
+        'scripts/JDModule',
+        'scripts/JDVideo',
+        'scripts/JDLookAt',
+        'scripts/JDPointLeftArm',
+        'scripts/JDPointRightArm',
+       ]
      )
