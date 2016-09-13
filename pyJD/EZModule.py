@@ -199,7 +199,19 @@ class EZModule(yarp.RFModule):
         
         return port
     
-    
+
+    def createOutputPort(self, name, target = None, mode = 'unbuffered'):
+        """ This method returns an output port.
+        
+        @param obj      - the object that the port is created for
+        @param name     - if a name is provided it gets appended to the modules name
+        @param buffered - if buffered is True a buffered port will be used otherwise not; 
+                          default is True.
+        @result port
+        """
+        return self.__createPort(name + ':o', target, mode)
+
+
 ####################################################################################################
 #
 # Default methods for running the modules standalone 
@@ -242,7 +254,6 @@ def main(module_cls):
     # resource_finder.configure(argc,argv);
 
     module = module_cls(args.ip, args.port, args.name)
-    module.configure(resource_finder)
     module.runModule(resource_finder)
 
     yarp.Network.fini()

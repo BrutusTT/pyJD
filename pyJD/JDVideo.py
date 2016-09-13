@@ -41,6 +41,7 @@ class JDVideo(EZModule):
     
 
     def runModule(self, rf = None):
+        self.configure(rf)
         self.video.getImages()
 
 

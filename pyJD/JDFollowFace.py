@@ -26,12 +26,10 @@ class JDFollowFace(EZModule):
 
 
     def configure(self, rf):
-
-        if not hasattr(self, 'faceInPort'):
-            EZModule.configure(self, rf)
-        
-            self.faceInPort      = self.createInputPort('face', 'buffered')
-            self.positionOutPort = self.createOutputPort('position', 'buffered')
+        EZModule.configure(self, rf)
+    
+        self.faceInPort      = self.createInputPort('face', 'buffered')
+        self.positionOutPort = self.createOutputPort('position', 'buffered')
         return True
 
 

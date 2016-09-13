@@ -30,22 +30,19 @@ class JDModule(EZModule):
 
 
     def configure(self, rf):
+        EZModule.configure(self, rf)
 
-
-        if not hasattr(self, 'lookAtPort'):
-            EZModule.configure(self, rf)
-            self.lookAtPort     = self.createInputPort('lookAt',     'buffered')
-            self.pointLeftPort  = self.createInputPort('pointLeft',  'buffered')
-            self.pointRightPort = self.createInputPort('pointRight', 'buffered')
-            
-            # set init poses
-            EZB()
+        self.lookAtPort     = self.createInputPort('lookAt',     'buffered')
+        self.pointLeftPort  = self.createInputPort('pointLeft',  'buffered')
+        self.pointRightPort = self.createInputPort('pointRight', 'buffered')
+        
+        # set init poses
+        EZB()
             
         return True
 
     
     def updateModule(self):
-        print '.'
         
         # read the bottle              
         lookAt_bottle    = self.lookAtPort.read(False)
