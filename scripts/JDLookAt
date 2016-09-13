@@ -1,8 +1,0 @@
-#!/usr/bin/env python2
-
-from pyJD.EZModule import main
-from pyJD.JDLookAtModule import JDLookAtModule
-
-
-if __name__ == '__main__':
-    main(JDLookAtModule)
