@@ -45,17 +45,18 @@ class JDModule(EZModule):
 
     
     def updateModule(self):
+        print '.'
         
         # read the bottle              
-        lookAt_bottle    = self.lookAtPort.read()
+        lookAt_bottle    = self.lookAtPort.read(False)
         if lookAt_bottle:
             self.lookAt(lookAt_bottle)
-
-        pointLeft_bottle = self.pointLeftPort.read()
+ 
+        pointLeft_bottle = self.pointLeftPort.read(False)
         if pointLeft_bottle:
             self.pointLeft(pointLeft_bottle)
-
-        pointRight_bottle = self.pointRightPort.read()
+ 
+        pointRight_bottle = self.pointRightPort.read(False)
         if pointRight_bottle:
             self.pointRight(pointRight_bottle)
 
@@ -120,7 +121,6 @@ class JDModule(EZModule):
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
-        print bottle.toStrin()
         
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
@@ -131,8 +131,6 @@ class JDModule(EZModule):
         angle_d4 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) ) / 3
         angle_d3 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
 
-        print angle_d3, angle_d4
-        
         # send it to the motors
         self.sendPosition(4, angle_d4)
         self.sendPosition(3, angle_d3)
