@@ -92,11 +92,17 @@ class EZModule(yarp.RFModule):
 
     def interruptModule(self):
         self.rpc_port.interrupt()
+        for x in dir(self):
+            if x.endswith('Port') and 'interrupt' in dir(getattr(self, x)):
+                getattr(self, x).interrupt()
         return True
 
 
     def close(self):
         self.rpc_port.close()
+        for x in dir(self):
+            if x.endswith('Port') and 'close' in dir(getattr(self, x)):
+                getattr(self, x).close()
         self.ezb.close()
         return True
 

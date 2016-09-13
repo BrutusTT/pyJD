@@ -17,7 +17,7 @@
 ####################################################################################################
 from pyJD.EZModule  import EZModule, main
 from pyJD.utils     import rad2deg, angle
-from pyJD.pyEZB     import EZB
+from pyJD.pyEZB.EZB import EZB
 
 
 class JDModule(EZModule):
@@ -120,18 +120,21 @@ class JDModule(EZModule):
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
-
+        print bottle.toStrin()
+        
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
         left_right  = bottle.get(1).asDouble() * -1.0
         down_up     = bottle.get(2).asDouble()
 
         # calculate the angles
-        angle_d4 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) )
+        angle_d4 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) ) / 3
         angle_d3 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
 
+        print angle_d3, angle_d4
+        
         # send it to the motors
-        self.sendPosition(4, angle_d4/3)
+        self.sendPosition(4, angle_d4)
         self.sendPosition(3, angle_d3)
         self.sendPosition(5, 90)
         self.sendPosition(6, 90)
