@@ -17,6 +17,7 @@
 ####################################################################################################
 from pyJD.EZModule  import EZModule, main
 from pyJD.utils     import rad2deg, angle
+from pyJD.pyEZB     import EZB
 
 
 class JDModule(EZModule):
@@ -33,10 +34,14 @@ class JDModule(EZModule):
 
         if not hasattr(self, 'lookAtPort'):
             EZModule.configure(self, rf)
-            self.lookAtPort = self.createInputPort('lookAt', 'buffered')
-
+            self.lookAtPort     = self.createInputPort('lookAt',     'buffered')
+            self.pointLeftPort  = self.createInputPort('pointLeft',  'buffered')
+            self.pointRightPort = self.createInputPort('pointRight', 'buffered')
+            
+            # set init poses
+            EZB()
+            
         return True
-
 
     
     def updateModule(self):
@@ -46,8 +51,15 @@ class JDModule(EZModule):
         if lookAt_bottle:
             self.lookAt(lookAt_bottle)
 
-        return True
+        pointLeft_bottle = self.pointLeftPort.read()
+        if pointLeft_bottle:
+            self.pointLeft(pointLeft_bottle)
 
+        pointRight_bottle = self.pointRightPort.read()
+        if pointRight_bottle:
+            self.pointRight(pointRight_bottle)
+
+        return True
 
 
     def respond(self, command, reply):
@@ -77,7 +89,7 @@ class JDModule(EZModule):
     def lookAt(self, bottle):
         """ This method executes the lookAt command.
 
-        @param bottle - input command
+        @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
 
         # get the coordinates from the bottle
@@ -103,7 +115,49 @@ class JDModule(EZModule):
         self.CUR_Y = down_up
 
 
+    def pointLeft(self, bottle):
+        """ This method executes the point command with the left arm.
+
+        @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
+        """
+
+        # get the coordinates from the bottle
+        near_far    = bottle.get(0).asDouble() * -1.0
+        left_right  = bottle.get(1).asDouble() * -1.0
+        down_up     = bottle.get(2).asDouble()
+
+        # calculate the angles
+        angle_d4 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) )
+        angle_d3 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
+
+        # send it to the motors
+        self.sendPosition(4, angle_d4/3)
+        self.sendPosition(3, angle_d3)
+        self.sendPosition(5, 90)
+        self.sendPosition(6, 90)
+        
+
+    def pointRight(self, bottle):
+        """ This method executes the point command with the right arm.
+
+        @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
+        """
+
+        # get the coordinates from the bottle
+        near_far    = bottle.get(0).asDouble() * -1.0
+        left_right  = bottle.get(1).asDouble() * -1.0
+        down_up     = bottle.get(2).asDouble() * -1.0
+
+        # calculate the angles
+        angle_d7 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) )
+        angle_d2 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
+
+        # send it to the motors
+        self.sendPosition(7, angle_d7/3)
+        self.sendPosition(2, angle_d2)
+        self.sendPosition(8, 90)
+        self.sendPosition(9, 90)
+
 
 if __name__ == '__main__':
     main(JDModule)
-    
