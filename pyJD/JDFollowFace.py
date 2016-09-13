@@ -16,20 +16,22 @@
 #    along with pyJD.  If not, see <http://www.gnu.org/licenses/>.                                 #
 ####################################################################################################
 ####################################################################################################
-from spy.modules.BaseModule        import BaseModule, main
 import yarp
 
+from pyJD.EZModule import EZModule, main
 
-class JDFollowFace(BaseModule):
+
+class JDFollowFace(EZModule):
     """ """
 
 
     def configure(self, rf):
 
-        BaseModule.configure(self, rf)
-    
-        self.faceInPort      = self.createInputPort('face', 'buffered')
-        self.positionOutPort = self.createOutputPort('position', 'buffered')
+        if not hasattr(self, 'faceInPort'):
+            EZModule.configure(self, rf)
+        
+            self.faceInPort      = self.createInputPort('face', 'buffered')
+            self.positionOutPort = self.createOutputPort('position', 'buffered')
         return True
 
 
