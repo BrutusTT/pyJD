@@ -22,9 +22,9 @@ The JDModule can be used to set JD's joints to specified positions.
 * **Message Format**: ``<near-far> <left-right> <down-up>``
 * **Parameter**
 
-	* ``<near-far>:      float - distance in meters [  0.1, -inf ]`` (Be aware: negative distance!)
-	* ``<left-right>:     float - distance in meters [ -inf,  inf ]``
-	* ``<down-up>:    float - distance in meters [ -inf,  inf ]``
+	* ``<near-far>``      float - distance in meters [  0.1, -inf ] ***Be aware: negative distance!***
+	* ``<left-right>``     float - distance in meters [ -inf,  inf ]
+	* ``<down-up>``    float - distance in meters [ -inf,  inf ]
 	
 * **Message Example**
 	* ``-1.0 0.5 0.0``   - Looks to the left (Fixation Point: 1m in front + 50cm to the left side) 
@@ -35,9 +35,9 @@ The JDModule can be used to set JD's joints to specified positions.
 * **Message Format**: ``<near-far> <left-right> <down-up>``
 * **Parameter**
 
-	* ``<near-far>:      float - distance in meters [  inf, -inf ]`` (Be aware: negative distance!)
-	* ``<left-right>:     float - distance in meters [ -inf,  inf ]``
-	* ``<down-up>:    float - distance in meters [ -inf,  inf ]``
+	* ``<near-far>``      float - distance in meters [  inf, -inf ] ***Be aware: negative distance!***
+	* ``<left-right>``     float - distance in meters [ -inf,  inf ]
+	* ``<down-up>``    float - distance in meters [ -inf,  inf ]
 
 * **Message Example**
 	* ``-1.0 0.5 0.0``   - Points to the left (Point: 1m in front + 50cm to the left side)
@@ -48,9 +48,9 @@ The JDModule can be used to set JD's joints to specified positions.
 * **Message Format**: ``<near-far> <left-right> <down-up>``
 * **Parameter**
 
-	* ``<near-far>:      float - distance in meters [  inf, -inf ]`` (Be aware: negative distance!)
-	* ``<left-right>:     float - distance in meters [ -inf,  inf ]``
-	* ``<down-up>:    float - distance in meters [ -inf,  inf ]``
+	* ``<near-far>``      float - distance in meters [  inf, -inf ] ***Be aware: negative distance!***
+	* ``<left-right>``     float - distance in meters [ -inf,  inf ]
+	* ``<down-up>``    float - distance in meters [ -inf,  inf ]
 	
 * **Message Example**
 	* ``-1.0 0.5 0.0``   - Points to the left (Point: 1m in front + 50cm to the left side)
