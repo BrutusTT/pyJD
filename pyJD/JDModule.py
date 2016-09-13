@@ -24,9 +24,9 @@ class JDModule(EZModule):
     """ The JDModule class provides a yarp module to control the JD robots motors. """
 
 
-    CUR_Z = 0.0
-    CUR_X = 0.0
-    CUR_Y = 0.0
+#     CUR_Z = 0.0
+#     CUR_X = 0.0
+#     CUR_Y = 0.0
 
 
     def configure(self, rf):
@@ -89,35 +89,28 @@ class JDModule(EZModule):
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
+        assert bottle.size() == 3
 
         # get the coordinates from the bottle
-        near_far    = bottle.get(1).asDouble() * -1.0
-        left_right  = bottle.get(2).asDouble()
-        down_up     = bottle.get(3).asDouble()
-
-        if bottle.size() > 3:
-            near_far    += self.CUR_Z
-            left_right  += self.CUR_X
-            down_up     += self.CUR_Y
+        near_far     = bottle.get(0).asDouble() * -1.0
+        left_right   = bottle.get(1).asDouble()
+        down_up      = bottle.get(2).asDouble()
 
         # calculate the angles
-        angle_d0 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) )
+        angle_d0 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) ) + 20
         angle_d1 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
 
         # send it to the motors
-        self.sendPosition(0, angle_d0 + 20)
+        self.sendPosition(0, angle_d0)
         self.sendPosition(1, angle_d1)
-
-        self.CUR_Z = near_far
-        self.CUR_X = left_right
-        self.CUR_Y = down_up
-
+        
 
     def pointLeft(self, bottle):
         """ This method executes the point command with the left arm.
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
+        assert bottle.size() == 3
         
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
@@ -140,6 +133,7 @@ class JDModule(EZModule):
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
+        assert bottle.size() == 3
 
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
@@ -147,11 +141,11 @@ class JDModule(EZModule):
         down_up     = bottle.get(2).asDouble() * -1.0
 
         # calculate the angles
-        angle_d7 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) )
+        angle_d7 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) ) / 3
         angle_d2 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
 
         # send it to the motors
-        self.sendPosition(7, angle_d7/3)
+        self.sendPosition(7, angle_d7)
         self.sendPosition(2, angle_d2)
         self.sendPosition(8, 90)
         self.sendPosition(9, 90)
