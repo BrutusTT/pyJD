@@ -50,8 +50,6 @@ setup( name                 = 'pyJD',
        scripts = [
         'scripts/JDModule',
         'scripts/JDVideo',
-        'scripts/JDLookAt',
-        'scripts/JDPointLeftArm',
-        'scripts/JDPointRightArm',
+        'scripts/JDFollowFace',
        ]
      )
