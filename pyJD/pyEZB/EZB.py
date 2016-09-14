@@ -147,28 +147,20 @@ class EZB(object):
             self.sock.close()
     
 
-    def clip_limits(self, servo, position):
-        """ This method clips the position based on the servo limits.
-
-        @param servo    - id of the servo
-        @param position - absolute value for the given servo position
-        @return integer - clipped absolute position
-        """
-        limit = self.LIMITS[servo]
-        if position < limit[0]:
-            position = limit[0]
-        elif position > limit[1]:
-            position = limit[1]
-        return position
-
-    
     def setPosition(self, servo, position):
         """ This method sets a position of the specified servo. 
         
+        The joint position values are clipped to the values defined in LIMITS.
+
         @param servo    - id of the servo
         @param position - absolute value for the given servo position
         """
-        position = self.clip_limits(servo, int(position))
+        
+        # clip joint limits
+        low, high = self.LIMITS[servo]
+        position  = min(max(low, int(position)), high)
+
+        # send command
         self.sendCommand(0, EZB.CmdSetServoPosition + servo, position)
     
     

@@ -58,9 +58,10 @@ class EZModule(yarp.RFModule):
 
     def __init__(self, ip, port, prefix):
         yarp.RFModule.__init__(self)
-        self.ip     = ip
-        self.port   = int(port)
-        self.prefix = prefix
+        self.ip       = ip
+        self.port     = int(port)
+        self.prefix   = prefix
+        self.last_pos = [-1] * len(EZModule.LIMITS)
 
 
     def configure(self, rf):
@@ -117,29 +118,29 @@ class EZModule(yarp.RFModule):
         return True
 
 
-    def clip_limits(self, servo, position):
-        """ This method clips the position based on the servo limits.
-
-        @param servo    - id of the servo
-        @param position - absolute value for the given servo position
-        @return integer - clipped absolute position
-        """
-        limit = self.LIMITS[servo]
-        if position < limit[0]:
-            position = limit[0]
-        elif position > limit[1]:
-            position = limit[1]
-        return position
-
-
     def sendPosition(self, servo, position):
         """ This method sends a position to the specified servo. 
+        
+        The joint position values are clipped to the values defined in LIMITS.
+        
+        If the current position and last position is the same, no commands will be issued to the
+        robot. This should increase the responsiveness time for the robot as the sending 
+        commands take some time.
         
         @param servo    - id of the servo
         @param position - absolute value for the given servo position
         """
-        position = self.clip_limits(servo, int(position))
-        self.ezb.send(chr(0xac + servo) + chr(position))
+        
+        # clip joint limits
+        low, high = self.LIMITS[servo]
+        position  = min(max(low, int(position)), high)
+
+        # check if issuing a command is needed
+        if self.last_pos[servo] != position:
+            self.last_pos[servo] = position
+            
+            # send command
+            self.ezb.send(chr(0xac + servo) + chr(position))
 
 
     def createInputPort(self, name, mode = 'unbuffered'):
