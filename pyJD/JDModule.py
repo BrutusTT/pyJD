@@ -24,11 +24,6 @@ class JDModule(EZModule):
     """ The JDModule class provides a yarp module to control the JD robots motors. """
 
 
-#     CUR_Z = 0.0
-#     CUR_X = 0.0
-#     CUR_Y = 0.0
-
-
     def configure(self, rf):
         EZModule.configure(self, rf)
 
@@ -89,7 +84,6 @@ class JDModule(EZModule):
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
-        assert bottle.size() == 3
 
         # get the coordinates from the bottle
         near_far     = bottle.get(0).asDouble() * -1.0
@@ -110,7 +104,6 @@ class JDModule(EZModule):
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
-        assert bottle.size() == 3
         
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
@@ -133,7 +126,6 @@ class JDModule(EZModule):
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
-        assert bottle.size() == 3
 
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
