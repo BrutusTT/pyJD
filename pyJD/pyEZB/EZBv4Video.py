@@ -1,19 +1,19 @@
+import StringIO
 import socket
 import cv2
 import numpy as np
-import StringIO
 
 
 EMSG_ROBOT_NOT_FOUND = 'Could not connect to the robot at %s:%s'
 
 
 class EZBv4Video(object):
-    
+
     # Default IP Address and Port for the JD Humanoid Robot.
     ConnectedEndPointAddress    = '192.168.1.1'
     ConnectedEndPointPort       = 24
 
-    
+
     Res160x120              = 0
     Res320x240              = 1
     Res640x480              = 2
@@ -73,7 +73,7 @@ class EZBv4Video(object):
             self.isConnected = True
         except:
             raise RuntimeError(EMSG_ROBOT_NOT_FOUND % (self.ip, self.port))
-        
+
 
     def getImage(self):
 
@@ -85,29 +85,27 @@ class EZBv4Video(object):
                 raise RuntimeError("socket connection broken")
             chunks.append(chunk)
             bytes_recd = bytes_recd + len(chunk)
-    
+
         return ''.join(chunks)
-        
+
 
     def getImages(self):
-        
+
         chunks       = []
         foundStart   = False
         self.stopped = False
 
-
         self.sock.send(bytearray([EZBv4Video.START]))
-
 
         while not self.stopped:
 
             self.sock.send(bytearray([EZBv4Video.Res160x120]))
-            
+
             # fill the buffer
             chunk = self.sock.recv(EZBv4Video.BUFFER_SIZE)
             if chunk == '':
                 raise RuntimeError("socket connection broken")
-            
+
             # try to find image start
             try:
                 foundStart = chunk.index('EZIMG')
@@ -131,14 +129,15 @@ class EZBv4Video(object):
 
         self.sock.close()
         self.isConnected = False
-        
 
-    def createOpencvImageFromStringio(self, img_stream, cv2_img_flag = 0):
+
+    @staticmethod
+    def createOpencvImageFromStringio(img_stream, cv2_img_flag = 0):
         img_stream.seek(0)
-        return cv2.imdecode( np.asarray(bytearray(img_stream.read()), dtype = np.uint8), 
-                             cv2_img_flag )            
+        return cv2.imdecode( np.asarray(bytearray(img_stream.read()), dtype = np.uint8),
+                             cv2_img_flag )
 
-            
+
     def processImage(self, _buffer):
 
         # not an image
@@ -147,16 +146,17 @@ class EZBv4Video(object):
 
         image = self.createOpencvImageFromStringio(StringIO.StringIO(_buffer[9:]), 1)
         self.openCVImageHook(image)
-        
 
-    def openCVImageHook(self, image):
+
+    @staticmethod
+    def openCVImageHook(image):
         cv2.imshow('JD', image)
 
-        # stop if q is pressed            
+        # stop if q is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             pass
 
-    
+
     def __del__(self):
         if self.isConnected and self.sock:
             self.sock.close()

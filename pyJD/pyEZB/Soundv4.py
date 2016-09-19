@@ -1,7 +1,4 @@
-import socket
-import cv2
-import numpy as np
-import StringIO
+import time
 from pyJD.pyEZB.EZB import EZB
 
 
@@ -9,11 +6,11 @@ EMSG_ROBOT_NOT_FOUND = 'Could not connect to the robot at %s:%s'
 
 
 class Soundv4(EZB):
-    
+
     # Default IP Address and Port for the JD Humanoid Robot.
     ConnectedEndPointAddress    = '192.168.1.1'
     ConnectedEndPointPort       = 24
-    
+
     # <summary>
     # The recommended size of the the audio packets
     # </summary>
@@ -32,30 +29,29 @@ class Soundv4(EZB):
     # <summary>
     # The size of each packet which is transmitted over the wire to the EZ-B.
     # </summary>
-    PACKET_SIZE = RECOMMENDED_PACKET_SIZE;
+    PACKET_SIZE = RECOMMENDED_PACKET_SIZE
 
     # <summary>
     # The ammount of data to prebuffer to the EZ-B before playing the audio. The EZ-B has a 50k
     # buffer, so this value cannot be any higher than that.
     # </summary>
-    PREBUFFER_SIZE = RECOMMENDED_PREBUFFER_SIZE;
-        
-    
+    PREBUFFER_SIZE = RECOMMENDED_PREBUFFER_SIZE
+
+
     def playAudio(self, audio):
         self.position = 0
         self.playing  = False
-        
+
 #        audio  = [ x for x in range(255) ] * 100000
-        import time
         while self.position < len(audio):
             time.sleep(0.001)
             data   = self.prepareAudio(audio)
             print len(audio), len(data), self.position
-            
-            if (not self.playing and self.position > self.PREBUFFER_SIZE):
+
+            if not self.playing and self.position > self.PREBUFFER_SIZE:
                 self.sendCommand(0, EZB.CmdSoundStreamCmd, EZB.CmdSoundPlay)
                 self.playing = True
-    
+
             self.sendCommand(0, EZB.CmdSoundStreamCmd, data)
 
 
@@ -65,7 +61,7 @@ class Soundv4(EZB):
         bTmp             = audio[self.position : self.position + self.PACKET_SIZE]
 
         self.position   += len(bTmp)
-        
+
         bArray           = bytearray([0]*len(bTmp))
 
         highest          = 0
@@ -79,16 +75,16 @@ class Soundv4(EZB):
             newVal = float(bTmp[idx])
             print newVal
 
-            if (newVal > 128):
+            if newVal > 128:
                 newVal = max(128, 128 + ((newVal - 128) * volumeMultiplier))
-            elif (newVal < 128):
-                newVal = min(128, 128 - ((128 - newVal) * volumeMultiplier));
+            elif newVal < 128:
+                newVal = min(128, 128 - ((128 - newVal) * volumeMultiplier))
 
-            if (newVal > 255):
-                newVal     = 255
-            elif (newVal < 0):
-                newVal      = 0
-            
+            if newVal > 255:
+                newVal     = 255.0
+            elif newVal < 0:
+                newVal      = 0.0
+
 
             highest = max(highest, int(newVal))
             lowest  = min(lowest,  int(newVal))
@@ -105,5 +101,3 @@ class Soundv4(EZB):
         dataTmp += bArray
 
         return dataTmp
-
-

@@ -53,7 +53,7 @@ class EZModule(yarp.RFModule):
                     (50, 130),
                     (0, 180),
                     (0, 180),
-                    (0, 180) ] 
+                    (0, 180) ]
 
 
     def __init__(self, ip, port, prefix):
@@ -66,7 +66,7 @@ class EZModule(yarp.RFModule):
 
     def configure(self, rf):
 
-        name = self.__class__.__name__ 
+        name = self.__class__.__name__
         if self.prefix:
             name = self.prefix + '/' + name
 
@@ -119,18 +119,18 @@ class EZModule(yarp.RFModule):
 
 
     def sendPosition(self, servo, position):
-        """ This method sends a position to the specified servo. 
-        
+        """ This method sends a position to the specified servo.
+
         The joint position values are clipped to the values defined in LIMITS.
-        
+
         If the current position and last position is the same, no commands will be issued to the
-        robot. This should increase the responsiveness time for the robot as the sending 
+        robot. This should increase the responsiveness time for the robot as the sending
         commands take some time.
-        
+
         @param servo    - id of the servo
         @param position - absolute value for the given servo position
         """
-        
+
         # clip joint limits
         low, high = self.LIMITS[servo]
         position  = min(max(low, int(position)), high)
@@ -138,29 +138,29 @@ class EZModule(yarp.RFModule):
         # check if issuing a command is needed
         if self.last_pos[servo] != position:
             self.last_pos[servo] = position
-            
+
             # send command
             self.ezb.send(chr(0xac + servo) + chr(position))
 
 
     def createInputPort(self, name, mode = 'unbuffered'):
         """ This method returns an input port.
-        
+
         @param obj      - the object that the port is created for
         @param name     - if a name is provided it gets appended to the modules name
-        @param buffered - if buffered is True a buffered port will be used otherwise not; 
+        @param buffered - if buffered is True a buffered port will be used otherwise not;
                           default is True.
         @result port
         """
         return self.__createPort(name + ':i', None, mode)
-    
+
 
     def __createPort(self, name, target = None, mode = 'unbuffered'):
         """ This method returns a port object.
-    
+
         @param name     - yarp name for the port
         @param obj      - object for which the port is created
-        @param buffered - if buffered is True a buffered port will be used otherwise not; 
+        @param buffered - if buffered is True a buffered port will be used otherwise not;
                           default is True.
         @result port
         """
@@ -170,43 +170,43 @@ class EZModule(yarp.RFModule):
 
         elif mode == 'rpcclient':
             port = yarp.RpcClient()
-    
+
         elif mode == 'rpcserver':
             port = yarp.RpcServer()
-        
+
         else:
             port = yarp.Port()
-    
+
         # build port name
         port_name = ['']
 
         # prefix handling
         if hasattr(self, 'prefix') and self.prefix:
             port_name.append(self.prefix)
- 
+
         port_name.append(self.__class__.__name__)
         port_name.append(name)
-            
+
         # open port
         if not port.open('/'.join(port_name)):
             raise RuntimeError, EMSG_YARP_NOT_FOUND
-    
+
         # add output if given
         if target:
             port.addOutput(target)
-    
+
         if hasattr(self, '_ports'):
             self._ports.append(port)
-        
+
         return port
-    
+
 
     def createOutputPort(self, name, target = None, mode = 'unbuffered'):
         """ This method returns an output port.
-        
+
         @param obj      - the object that the port is created for
         @param name     - if a name is provided it gets appended to the modules name
-        @param buffered - if buffered is True a buffered port will be used otherwise not; 
+        @param buffered - if buffered is True a buffered port will be used otherwise not;
                           default is True.
         @result port
         """
@@ -215,25 +215,25 @@ class EZModule(yarp.RFModule):
 
 ####################################################################################################
 #
-# Default methods for running the modules standalone 
+# Default methods for running the modules standalone
 #
 ####################################################################################################
 def createArgParser():
-    """ This method creates a base argument parser. 
-    
+    """ This method creates a base argument parser.
+
     @return Argument Parser object
     """
     parser = argparse.ArgumentParser(description='Create a JDModule to control the JD robot.')
-    parser.add_argument( '-i', '--ip', 
-                         dest       = 'ip', 
+    parser.add_argument( '-i', '--ip',
+                         dest       = 'ip',
                          default    = str(EZModule.TCP_IP),
                          help       = 'IP address for the JD robot.')
-    parser.add_argument( '-p', '--port', 
-                         dest       = 'port', 
+    parser.add_argument( '-p', '--port',
+                         dest       = 'port',
                          default    = str(EZModule.TCP_PORT),
                          help       = 'Port for the JD robot')
-    parser.add_argument( '-n', '--name', 
-                         dest       = 'name', 
+    parser.add_argument( '-n', '--name',
+                         dest       = 'name',
                          default    = '',
                          help       = 'Name prefix for Yarp port names')
 
@@ -241,7 +241,7 @@ def createArgParser():
 
 
 def main(module_cls):
-    """ This is a main method to run a module from command line. 
+    """ This is a main method to run a module from command line.
 
     @param module_cls - an EZModule based class that can be started as a standalone module.
     """

@@ -8,3 +8,5 @@ dist/
 .settings/org.eclipse.core.resources.prefs
 
 docs/_build
+
+.settings/org.eclipse.ltk.core.refactoring.prefs

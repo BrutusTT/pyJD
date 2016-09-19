@@ -30,27 +30,27 @@ class JDModule(EZModule):
         self.lookAtPort     = self.createInputPort('lookAt',     'buffered')
         self.pointLeftPort  = self.createInputPort('pointLeft',  'buffered')
         self.pointRightPort = self.createInputPort('pointRight', 'buffered')
-        
+
         # set init poses
         EZB()
-            
+
         return True
 
-    
+
     def updateModule(self):
-        
-        # read the bottle              
-        lookAt_bottle    = self.lookAtPort.read(False)
-        if lookAt_bottle:
-            self.lookAt(lookAt_bottle)
- 
-        pointLeft_bottle = self.pointLeftPort.read(False)
-        if pointLeft_bottle:
-            self.pointLeft(pointLeft_bottle)
- 
-        pointRight_bottle = self.pointRightPort.read(False)
-        if pointRight_bottle:
-            self.pointRight(pointRight_bottle)
+
+        # read the bottle
+        look_at_bottle    = self.lookAtPort.read(False)
+        if look_at_bottle:
+            self.lookAt(look_at_bottle)
+
+        point_left_bottle = self.pointLeftPort.read(False)
+        if point_left_bottle:
+            self.pointLeft(point_left_bottle)
+
+        point_right_bottle = self.pointRightPort.read(False)
+        if point_right_bottle:
+            self.pointRight(point_right_bottle)
 
         return True
 
@@ -97,14 +97,14 @@ class JDModule(EZModule):
         # send it to the motors
         self.sendPosition(0, angle_d0)
         self.sendPosition(1, angle_d1)
-        
+
 
     def pointLeft(self, bottle):
         """ This method executes the point command with the left arm.
 
         @param bottle - Message Format: <near-far:double> <left-right:double> <down-up:double>
         """
-        
+
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
         left_right  = bottle.get(1).asDouble() * -1.0
@@ -119,7 +119,7 @@ class JDModule(EZModule):
         self.sendPosition(3, angle_d3)
         self.sendPosition(5, 90)
         self.sendPosition(6, 90)
-        
+
 
     def pointRight(self, bottle):
         """ This method executes the point command with the right arm.

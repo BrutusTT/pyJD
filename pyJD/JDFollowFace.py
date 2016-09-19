@@ -15,30 +15,31 @@
 #    You should have received a copy of the GNU Affero General Public License                      #
 #    along with pyJD.  If not, see <http://www.gnu.org/licenses/>.                                 #
 ####################################################################################################
-####################################################################################################
 import yarp
 
 from pyJD.EZModule import EZModule, main
 
 
 class JDFollowFace(EZModule):
-    """ """
+    """ The JDFollowFace class provides a module which uses a given face position to calculate
+        a gazing direction for the JD Humanoid in order to look at the face.
+    """
 
 
     def configure(self, rf):
         EZModule.configure(self, rf)
-    
+
         self.faceInPort      = self.createInputPort('face', 'buffered')
         self.positionOutPort = self.createOutputPort('position', 'buffered')
         return True
 
 
     def updateModule(self):
-        
-        # read the bottle              
-        input_bottle    = self.faceInPort.read()
 
-        # get the envelope as bottle            
+        # read the bottle
+        input_bottle = self.faceInPort.read()
+
+        # get the envelope as bottle
         envelope_bottle = self.faceInPort.prepare()
         envelope_bottle.clear()
         self.faceInPort.getEnvelope(envelope_bottle)
@@ -46,7 +47,7 @@ class JDFollowFace(EZModule):
         # if bottle exists run the convert method
         if input_bottle:
             self.onBottle(input_bottle, envelope_bottle)
-        
+
         return True
 
 
@@ -61,7 +62,7 @@ class JDFollowFace(EZModule):
 
         center_x = face.get(1).asInt()
         center_y = face.get(2).asInt()
-        
+
         print center_x, center_y,
 
         center_x -= 160
@@ -69,12 +70,12 @@ class JDFollowFace(EZModule):
         z = 1.0
         x = (center_x * 0.5) / 320
         y = 0.0
-        
+
         print z, x, y
-        
-        bottle   = yarp.Bottle()
+
+        bottle = yarp.Bottle()
         bottle.clear()
-        
+
         bottle.addDouble(0.0)
         bottle.addDouble(x)
         bottle.addDouble(0.0)

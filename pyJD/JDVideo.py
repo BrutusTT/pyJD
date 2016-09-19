@@ -23,11 +23,10 @@ from pyJD.EZModule         import EZModule, main
 from pyJD.pyEZB.EZBv4Video import EZBv4Video
 
 
-
 class JDVideo(EZModule):
     """ The JDVideo class provides a yarp module to retrieve the JD's video stream. """
 
-    
+
     def configure(self, rf):
         EZModule.configure(self, rf)
 
@@ -36,9 +35,9 @@ class JDVideo(EZModule):
         self.imgOutPort.open('/JDVideo/img:o')
 
         self.video = EZBv4Video()
-        self.video.openCVImageHook = self.onImage        
+        self.video.openCVImageHook = self.onImage
         return True
-    
+
 
     def runModule(self, rf = None):
         self.configure(rf)
@@ -48,10 +47,10 @@ class JDVideo(EZModule):
     def onImage(self, image):
 
         # and convert image back to something the yarpview can understand
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) 
-        image = cv2.resize(image, (320, 200)) 
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = cv2.resize(image, (320, 200))
         self.bufArrayOut[:,:] = image
-    
+
         # Send the result to the output port
         self.imgOutPort.write(self.bufImageOut)
 
@@ -65,34 +64,34 @@ class JDVideo(EZModule):
         self.imgOutPort.close()
         return EZModule.close(self)
 
-    
-    @staticmethod    
+
+    @staticmethod
     def createImageBuffer(width = 320, height = 240, channels = 3):
-        """ This method creates image buffers with the specified \a width, \a height and number of 
+        """ This method creates image buffers with the specified \a width, \a height and number of
             color channels \a channels.
-            
+
         @param width    - integer specifying the width of the image   (default: 320)
         @param height   - integer specifying the height of the image  (default: 240)
         @param channels - integer specifying number of color channels (default: 3)
         @return image, buffer array
         """
-    
+
         if channels == 1:
             buf_image = yarp.ImageFloat()
             buf_image.resize(width, height)
-            
+
             buf_array = np.zeros((height, width), dtype = np.float32)
-            
+
         else:
             buf_image = yarp.ImageRgb()
             buf_image.resize(width, height)
-            
+
             buf_array = np.zeros((height, width, channels), dtype = np.uint8)
-    
-        buf_image.setExternal( buf_array, 
-                               buf_array.shape[1], 
+
+        buf_image.setExternal( buf_array,
+                               buf_array.shape[1],
                                buf_array.shape[0] )
-    
+
         return buf_image, buf_array
 
 
