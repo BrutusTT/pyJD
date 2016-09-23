@@ -36,7 +36,6 @@ class EZB(object):
     CmdHC_SR04                  = 228       # +23 (251)
     CmdSoundStreamCmd           = 254
 
-
     # Existing motor ID's are D0-D9, D12-D14 and D16-D18 there are more limits
     LIMITS      = [ (30, 180),
                     (70, 170),
@@ -60,6 +59,8 @@ class EZB(object):
                     (0, 180),
                     (0, 180) ]
 
+    SERVOS              = 23
+
     SERVO_SPEED_SLOWEST = 20
     SERVO_SPEED_FASTEST = 0
 
@@ -67,12 +68,38 @@ class EZB(object):
     CmdSoundLoad     = 1
     CmdSoundPlay     = 2
 
+    DEFAULT_P    = [ ( 0, 110 ),    # head left - right
+                     ( 1, 90  ),    # neck up - down
+                     ( 6, 90  ),    # right hand closed
+                     ( 5, 70  ),    # right elbow
+                     ( 4, 20  ),    # right shoulder close - open
+                     ( 3, 180  ),   # right shoulder rotation
+
+                     ( 9, 90  ),    # left hand
+                     ( 8, 70  ),    # left elbow
+                     ( 7, 20  ),    # left shoulder close - open
+                     ( 2, 10  ),    # left shoulder rotation
+
+                     ( 14, 90  ),   # right feet
+                     ( 13, 80  ),   # right knee
+                     ( 12, 80  ),   # right hip
+
+                     ( 18, 80  ),   # left feet
+                     ( 17, 80  ),   # left knee
+                     ( 16, 90  ),   # left hip
+                   ]
+
+    DEFAULT_POSE = [-1] * 23
+    for servo, position in DEFAULT_P:
+        DEFAULT_POSE[servo] = position
+
 
     def __init__(self, ip = ConnectedEndPointAddress, port = ConnectedEndPointPort):
-        self.ip          = ip
-        self.port        = port
-        self.sock        = None
-        self.isConnected = False
+        self.ip           = ip
+        self.port         = port
+        self.sock         = None
+        self.isConnected  = False
+        self._currentPose = [-1] * 24
         self.connect()
         self.init()
 
@@ -86,35 +113,12 @@ class EZB(object):
         self.rgbEyes.setColor([0,1,2,9,10,11], 0, 0, 7)
         self.rgbEyes.setColor([4,13], 7, 7, 7)
 
-        default_pose = [ ( 0, 110 ),    # head left - right
-                         ( 1, 90  ),    # neck up - down
-                         ( 6, 90  ),    # right hand closed
-                         ( 5, 70  ),    # right elbow
-                         ( 4, 20  ),    # right shoulder close - open
-                         ( 3, 180  ),   # right shoulder rotation
-
-                         ( 9, 90  ),    # left hand
-                         ( 8, 70  ),    # left elbow
-                         ( 7, 20  ),    # left shoulder close - open
-                         ( 2, 10  ),    # left shoulder rotation
-
-                         ( 14, 90  ),   # right feet
-                         ( 13, 80  ),   # right knee
-                         ( 12, 80  ),   # right hip
-
-                         ( 18, 80  ),   # left feet
-                         ( 17, 80  ),   # left knee
-                         ( 16, 90  ),   # left hip
-                       ]
-
-        for idx, v in default_pose:
-            self.setPosition(idx, v)
-            time.sleep(0.25)
+        self.setPose(EZB.DEFAULT_POSE)
 
 
     def connect(self):
         try:
-            self.sock = socket.create_connection((self.ip, self.port), timeout = 10)
+            self.sock        = socket.create_connection((self.ip, self.port), timeout = 10)
             self.isConnected = True
         except:
             raise RuntimeError(EMSG_ROBOT_NOT_FOUND % (self.ip, self.port))
@@ -129,10 +133,7 @@ class EZB(object):
         # prepare data
         cmd_data = bytearray([cmd])
         if params:
-            if not isinstance(params, bytearray):
-                cmd_data += bytearray([params])
-            else:
-                cmd_data += params
+            cmd_data += bytearray([params]) if not isinstance(params, bytearray) else params
 
         # send data
         self.sock.send(cmd_data)
@@ -155,12 +156,16 @@ class EZB(object):
         @param position - absolute value for the given servo position
         """
 
-        # clip joint limits
-        low, high = self.LIMITS[servo]
-        position  = min(max(low, int(position)), high)
+        # check general limits
+        if 0 <= servo < EZB.SERVOS and 0 <= position <= 180:
 
-        # send command
-        self.sendCommand(0, EZB.CmdSetServoPosition + servo, position)
+            # clip joint limits
+            low, high = self.LIMITS[servo]
+            position  = min(max(low, int(position)), high)
+
+            # send command
+            self.sendCommand(0, EZB.CmdSetServoPosition + servo, position)
+            self._currentPose[servo] = position
 
 
     def setServoSpeed(self, servo, speed):
@@ -169,4 +174,24 @@ class EZB(object):
         @param servo    - id of the servo
         @param position - absolute value for the given servo position
         """
-        self.sendCommand(0, EZB.CmdSetServoSpeed + servo, speed)
+
+        # check general limits
+        if 0 <= servo < EZB.SERVOS and EZB.SERVO_SPEED_FASTEST <= speed <= EZB.SERVO_SPEED_SLOWEST:
+            self.sendCommand(0, EZB.CmdSetServoSpeed + servo, speed)
+
+
+    def getCurrentPose(self):
+        """ This method returns a copy of the current pose.
+
+        @return list - [ <position>* ] The index in the list is the id of the servo.
+        """
+        return [x for x in self._currentPose]
+
+
+    def setPose(self, pose):
+        """ This methods sets a full pose to the robot.
+
+        @param pose - [ <position>* ] The index in the list is the id of the servo.
+        """
+        for servo, position in enumerate(pose):
+            self.setPosition(servo, position)

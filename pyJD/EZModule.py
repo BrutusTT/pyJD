@@ -31,7 +31,7 @@ class EZModule(yarp.RFModule):
     # Default IP Address and Port for the JD Humanoid Robot.
     TCP_IP      = '192.168.1.1'
     TCP_PORT    = 23
-
+ 
     # Existing motor ID's are D0-D9, D12-D14 and D16-D18 there are more limits
     LIMITS      = [ (30, 180),
                     (70, 170),
@@ -61,7 +61,7 @@ class EZModule(yarp.RFModule):
         self.ip       = ip
         self.port     = int(port)
         self.prefix   = prefix
-        self.last_pos = [-1] * len(EZModule.LIMITS)
+#         self.last_pos = [-1] * len(EZModule.LIMITS)
 
 
     def configure(self, rf):
@@ -71,11 +71,6 @@ class EZModule(yarp.RFModule):
             name = self.prefix + '/' + name
 
         self.setName(name)
-
-        try:
-            self.ezb = socket.create_connection((self.ip, self.port), timeout = 1)
-        except:
-            raise RuntimeError(EMSG_ROBOT_NOT_FOUND % (self.ip, self.port))
 
         # RPC Port
         self.rpc_port = yarp.RpcServer()
@@ -104,7 +99,6 @@ class EZModule(yarp.RFModule):
         for x in dir(self):
             if x.endswith('Port') and 'close' in dir(getattr(self, x)):
                 getattr(self, x).close()
-        self.ezb.close()
         return True
 
 
@@ -116,31 +110,6 @@ class EZModule(yarp.RFModule):
         # XXX: I do not know why we need that, but if method is empty the module gets stuck
         time.sleep(0.000001)
         return True
-
-
-    def sendPosition(self, servo, position):
-        """ This method sends a position to the specified servo.
-
-        The joint position values are clipped to the values defined in LIMITS.
-
-        If the current position and last position is the same, no commands will be issued to the
-        robot. This should increase the responsiveness time for the robot as the sending
-        commands take some time.
-
-        @param servo    - id of the servo
-        @param position - absolute value for the given servo position
-        """
-
-        # clip joint limits
-        low, high = self.LIMITS[servo]
-        position  = min(max(low, int(position)), high)
-
-        # check if issuing a command is needed
-        if self.last_pos[servo] != position:
-            self.last_pos[servo] = position
-
-            # send command
-            self.ezb.send(chr(0xac + servo) + chr(position))
 
 
     def createInputPort(self, name, mode = 'unbuffered'):

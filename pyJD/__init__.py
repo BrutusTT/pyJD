@@ -15,3 +15,15 @@
 #    You should have received a copy of the GNU Affero General Public License                      #
 #    along with pyJD.  If not, see <http://www.gnu.org/licenses/>.                                 #
 ####################################################################################################
+import os
+import os.path as op
+from appdirs import user_data_dir
+
+APP_NAME     = 'pyJD'
+APP_AUTHOR   = 'BrutusTT'
+
+DATA_PATH = user_data_dir(APP_NAME, APP_AUTHOR)
+
+# initialize app dirs if required
+if not op.exists(DATA_PATH):
+    os.makedirs(DATA_PATH)
