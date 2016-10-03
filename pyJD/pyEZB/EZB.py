@@ -39,12 +39,12 @@ class EZB(object):
     # Existing motor ID's are D0-D9, D12-D14 and D16-D18 there are more limits
     LIMITS      = [ (30, 180),
                     (70, 170),
-                    (0, 170),
-                    (0, 170),
-                    (0, 60),
                     (0, 180),
-                    (0, 90),
-                    (0, 60),
+                    (0, 180),
+                    (0, 180),
+                    (0, 180),
+                    (0, 180),
+                    (0, 180),
                     (0, 180),
                     (0, 180),
                     (0, 180),
@@ -71,22 +71,22 @@ class EZB(object):
     DEFAULT_P    = [ ( 0, 110 ),    # head left - right
                      ( 1, 90  ),    # neck up - down
                      ( 6, 90  ),    # right hand closed
-                     ( 5, 70  ),    # right elbow
-                     ( 4, 20  ),    # right shoulder close - open
-                     ( 3, 180  ),   # right shoulder rotation
+                     ( 5, 110 ),    # right elbow
+                     ( 4, 160 ),    # right shoulder close - open
+                     ( 3, 170 ),   # right shoulder rotation
 
                      ( 9, 90  ),    # left hand
                      ( 8, 70  ),    # left elbow
                      ( 7, 20  ),    # left shoulder close - open
                      ( 2, 10  ),    # left shoulder rotation
 
-                     ( 14, 90  ),   # right feet
-                     ( 13, 80  ),   # right knee
-                     ( 12, 80  ),   # right hip
+                     ( 14, 90 ),   # right feet
+                     ( 13, 80 ),   # right knee
+                     ( 12, 79 ),   # right hip
 
-                     ( 18, 80  ),   # left feet
-                     ( 17, 80  ),   # left knee
-                     ( 16, 90  ),   # left hip
+                     ( 18, 80 ),   # left feet
+                     ( 17, 80 ),   # left knee
+                     ( 16, 90 ),   # left hip
                    ]
 
     DEFAULT_POSE = [-1] * 23
@@ -155,13 +155,14 @@ class EZB(object):
         @param servo    - id of the servo
         @param position - absolute value for the given servo position
         """
+        position = int(position)
 
         # check general limits
         if 0 <= servo < EZB.SERVOS and 0 <= position <= 180:
 
             # clip joint limits
             low, high = self.LIMITS[servo]
-            position  = min(max(low, int(position)), high)
+            position  = min(max(low, position), high)
 
             # send command
             self.sendCommand(0, EZB.CmdSetServoPosition + servo, position)
@@ -174,6 +175,7 @@ class EZB(object):
         @param servo    - id of the servo
         @param position - absolute value for the given servo position
         """
+        speed = int(speed)
 
         # check general limits
         if 0 <= servo < EZB.SERVOS and EZB.SERVO_SPEED_FASTEST <= speed <= EZB.SERVO_SPEED_SLOWEST:

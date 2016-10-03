@@ -123,17 +123,24 @@ class JDModule(EZModule):
         # get the coordinates from the bottle
         near_far    = bottle.get(0).asDouble() * -1.0
         left_right  = bottle.get(1).asDouble() * -1.0
-        down_up     = bottle.get(2).asDouble()
+        down_up     = bottle.get(2).asDouble() * -1.0
 
         # calculate the angles
-        angle_d4 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) ) / 3
-        angle_d3 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
+        point_to  = [left_right, down_up, near_far]
+        angle_d3 = 180 -  rad2deg( angle((0.0, 1.0, 0.0), point_to) )
+        angle_d4 = 180 - (rad2deg( angle((1.0, 0.0, 0.0), point_to) ) - 90)
+
+        # split angle d4 into d4 and d5 values
+        angle_d5 = max(  0, angle_d4 - 180) + 90
+        angle_d4 = min(180, angle_d4)
 
         # send it to the motors
+        self.ezb.setPosition(6, 90)
+        self.ezb.setPosition(5, angle_d5)
         self.ezb.setPosition(4, angle_d4)
         self.ezb.setPosition(3, angle_d3)
-        self.ezb.setPosition(5, 90)
-        self.ezb.setPosition(6, 90)
+
+        print angle_d3, angle_d4, angle_d5
 
 
     def pointRight(self, bottle):
@@ -148,15 +155,21 @@ class JDModule(EZModule):
         down_up     = bottle.get(2).asDouble() * -1.0
 
         # calculate the angles
-        angle_d7 = rad2deg( angle([1.0, 0.0, 0.0], [left_right, down_up, near_far]) ) / 3
-        angle_d2 = rad2deg( angle([0.0, 1.0, 0.0], [left_right, down_up, near_far]) )
+        point_to = [left_right, down_up, near_far]
+        angle_d2 = rad2deg( angle((0.0, 1.0, 0.0), point_to) )
+        angle_d7 = 90 - rad2deg( angle((1.0, 0.0, 0.0), point_to) )
+
+        # split angle d4 into d4 and d5 values
+        angle_d8 = min(  1, angle_d7) + 90
+        angle_d7 = max(  1, angle_d7)
 
         # send it to the motors
+        self.ezb.setPosition(9, 90)
+        self.ezb.setPosition(8, angle_d8)
         self.ezb.setPosition(7, angle_d7)
         self.ezb.setPosition(2, angle_d2)
-        self.ezb.setPosition(8, 90)
-        self.ezb.setPosition(9, 90)
 
+        print angle_d2, angle_d7, angle_d8
 
     def pattern(self, bottle):
         pattern = bottle.get(0).toString()
